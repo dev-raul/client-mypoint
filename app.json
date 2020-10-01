@@ -1,0 +1,12 @@
+{
+  "name": "clientemais",
+  "displayName": "clientemais",
+  "expo": {
+    "name": "clientemais",
+    "slug": "clientemais",
+    "version": "1.0.0",
+    "assetBundlePatterns": [
+      "**/*"
+    ]
+  }
+}
