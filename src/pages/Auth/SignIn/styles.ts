@@ -1,21 +1,28 @@
 import styled from "styled-components/native";
-
 import { Dimensions, Animated } from "react-native";
+import { Form } from "@unform/mobile";
+
 const { width } = Dimensions.get("screen");
-import { lighten } from "polished";
+import { lighten, rgba } from "polished";
+
+export const Backgroung = styled.ImageBackground`
+  flex: 1;
+  width: ${width}px;
+`;
 export const Container = styled.View`
   flex: 1;
   width: ${width}px;
   justify-content: center;
   align-items: center;
+  background: ${({ theme }) => rgba(theme.colors.background, 0.95)};
 `;
-export const Content = styled.View`
+export const ContentForm = styled(Form)`
   justify-content: center;
   align-items: center;
   width: ${width * 0.9}px;
 `;
 export const Logo = styled(Animated.Image).attrs({
-  source: require("../../../../assets/images/logo-signIn.svg"),
+  source: require("../../../../assets/images/logo-signIn.png"),
 })`
   margin-bottom: 30px;
 `;
@@ -35,7 +42,7 @@ export const GoSignUpView = styled.TouchableOpacity`
 export const GoSignUpText = styled.Text`
   font-family: "RobotoRegular";
   font-size: ${({ theme }) => theme.size.font(0.9)};
-  color: ${({ theme }) => theme.colors.white};
+  color: ${({ theme }) => theme.colors.textPrimary};
 `;
 export const Span = styled.Text`
   font-size: ${({ theme }) => theme.size.font(1)};

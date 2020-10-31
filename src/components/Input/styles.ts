@@ -1,6 +1,9 @@
-import styled from "styled-components/native";
-
-export const Container = styled.View`
+import styled, { css } from "styled-components/native";
+interface ContainerProps {
+  focused: boolean;
+  isValue: boolean;
+}
+export const Container = styled.View<ContainerProps>`
   margin-bottom: 10px;
   padding: 0 15px;
   height: 46px;
@@ -8,11 +11,17 @@ export const Container = styled.View`
   border-radius: 4px;
   flex-direction: row;
   align-items: center;
+
+  ${(props) =>
+    (props.focused || props.isValue) &&
+    css`
+      border-left-width: 4px;
+      border-left-color: ${({ theme }) => theme.colors.secundary};
+      padding: 0px 11px;
+    `}
 `;
 
-export const TextInput = styled.TextInput.attrs(({ theme }) => ({
-  placeholderTextColor: theme.colors.textPrimary,
-}))`
+export const TextInput = styled.TextInput`
   flex: 1;
   font-size: ${({ theme }) => theme.size.font(0.9)};
   font-family: "RobotoRegular";

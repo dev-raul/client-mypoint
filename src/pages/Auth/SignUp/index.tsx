@@ -2,8 +2,10 @@ import React from "react";
 import { View } from "react-native";
 
 import { Container } from "./styles";
-
-const SignUp: React.FC = () => {
+interface SignUpProps {
+  goToSignIn(): void;
+}
+const SignUp: React.FC<SignUpProps> = () => {
   return <Container></Container>;
 };
 

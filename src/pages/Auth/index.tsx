@@ -32,9 +32,9 @@ const Auth: React.FC = () => {
         onScroll={(e) => onScroll(e)}
         renderItem={({ item }) => {
           if (parseInt(String(item)) === 0) {
-            return <SignIn />;
+            return <SignIn goToSignUp={goToSignUp} />;
           } else if (parseInt(String(item)) === 2) {
-            return <SignUp />;
+            return <SignUp goToSignIn={goToSignIn} />;
           } else {
             return <Welcome goToSignIn={goToSignIn} goToSignUp={goToSignUp} />;
           }

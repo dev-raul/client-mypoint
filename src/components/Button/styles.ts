@@ -25,5 +25,5 @@ export const Container = styled(LinearGradient).attrs(({ theme }) => ({
 export const ButtonText = styled.Text`
   font-size: ${({ theme }) => theme.size.font(1)};
   font-family: "RobotoBold";
-  color: ${({ theme }) => theme.colors.textPrimary};
+  color: ${({ theme }) => theme.colors.white};
 `;

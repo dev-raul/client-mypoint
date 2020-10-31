@@ -4,6 +4,7 @@ import { DefaultTheme } from "styled-components/native";
 declare module "styled-components" {
   export interface DefaultTheme {
     colors: {
+      background: string;
       primary: string;
       primary_light: string;
       secundary: string;
@@ -18,10 +19,11 @@ declare module "styled-components" {
 
 export const lightTheme: DefaultTheme = {
   colors: {
+    background: "#fff",
     primary: "#5f5aa2",
     primary_light: "#716bc2",
     secundary: "#FF9800",
-    textPrimary: "#f3f3f3",
+    textPrimary: "#575757",
     white: "#fff",
   },
   size: {
