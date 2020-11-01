@@ -5,7 +5,7 @@ import { Container, Scroll, Teste } from "./styles";
 import Welcome from "./Welcome";
 import SignUp from "./SignUp";
 import SignIn from "./SignIn";
-const { width } = Dimensions.get("screen");
+const { width, height } = Dimensions.get("screen");
 const data: number[] = [0, 1, 2];
 const Auth: React.FC = () => {
   const scroll = useRef(null);
@@ -24,7 +24,7 @@ const Auth: React.FC = () => {
         ref={scroll}
         data={data}
         horizontal
-        snapToInterval={width}
+        snapToInterval={width < height ? width : height}
         decelerationRate="fast"
         showsHorizontalScrollIndicator={false}
         bounces={false}

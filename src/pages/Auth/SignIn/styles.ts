@@ -49,3 +49,14 @@ export const Span = styled.Text`
   color: ${({ theme }) => lighten(0.2, theme.colors.secundary)};
   font-family: "RobotoBold";
 `;
+
+export const CopyRight = styled.Text`
+  position: absolute;
+  bottom: 5px;
+  text-align: center;
+  right: 0;
+  left: 0;
+  color: ${({ theme }) => theme.colors.textPrimary};
+  font-family: "RobotoRegular";
+  font-size: ${({ theme }) => theme.size.font(1)};
+`;

@@ -2,6 +2,7 @@ import styled, { css } from "styled-components/native";
 interface ContainerProps {
   focused: boolean;
   isValue: boolean;
+  isError: boolean;
 }
 export const Container = styled.View<ContainerProps>`
   margin-bottom: 10px;
@@ -13,10 +14,20 @@ export const Container = styled.View<ContainerProps>`
   align-items: center;
 
   ${(props) =>
+    props.isError &&
+    css`
+      border-width: 1px;
+      border-color: ${({ theme }) => theme.colors.danger};
+    `}
+
+  ${(props) =>
     (props.focused || props.isValue) &&
     css`
+      border-color: ${({ theme }) => theme.colors.secundary};
+      border-right-width: 0px;
+      border-top-width: 0px;
+      border-bottom-width: 0px;
       border-left-width: 4px;
-      border-left-color: ${({ theme }) => theme.colors.secundary};
       padding: 0px 11px;
     `}
 `;
@@ -28,4 +39,11 @@ export const TextInput = styled.TextInput`
   letter-spacing: 1px;
   margin-left: 10px;
   color: ${({ theme }) => theme.colors.textPrimary};
+`;
+export const TextError = styled.Text`
+  margin-top: -9px;
+  text-align: right;
+  width: 100%;
+  margin-bottom: 5px;
+  color: ${({ theme }) => theme.colors.danger};
 `;

@@ -8,7 +8,9 @@ import {
   TextInput,
   StatusBar,
 } from "react-native";
+import * as Yup from "yup";
 import { FormHandles } from "@unform/core";
+import getValidationErros from "../../../utils/getValidationError";
 
 import Input from "../../../components/Input";
 import Button from "../../../components/Button";
@@ -22,13 +24,20 @@ import {
   GoSignUpText,
   Span,
   Backgroung,
+  CopyRight,
 } from "./styles";
 const { width } = Dimensions.get("screen");
 interface SignInProps {
   goToSignUp(): void;
 }
+interface FormData {
+  email: string;
+  password: string;
+}
 const SignIn: React.FC<SignInProps> = ({ goToSignUp }) => {
   const animated = new Animated.Value(0);
+
+  const [loading, setLoading] = useState(false);
 
   const formRef = useRef<FormHandles>(null);
   const passwordRef = useRef<TextInput>(null);
@@ -39,9 +48,36 @@ const SignIn: React.FC<SignInProps> = ({ goToSignUp }) => {
       useNativeDriver: true,
     }).start();
   }, []);
-  const handleSignIn = useCallback(async (data) => {
-    console.log(data);
-  }, []);
+  const handleSignIn = useCallback(
+    async (data: FormData) => {
+      console.log(loading);
+      if (!loading) {
+        console.log(data);
+        setLoading(true);
+        try {
+          const scheme = Yup.object().shape({
+            email: Yup.string()
+              .email("Digite um e-mail válido")
+              .required("E-mail obrigatório"),
+            password: Yup.string().min(8, "No mínimo 8 digitos"),
+          });
+
+          await scheme.validate(data, { abortEarly: false });
+          formRef.current?.setErrors({});
+          setLoading(false);
+        } catch (err) {
+          if (err instanceof Yup.ValidationError) {
+            console.log(err);
+            const errors = getValidationErros(err);
+            console.log("errprs", errors);
+            formRef.current?.setErrors(errors);
+          }
+          setLoading(false);
+        }
+      }
+    },
+    [loading]
+  );
 
   return (
     <>
@@ -94,6 +130,7 @@ const SignIn: React.FC<SignInProps> = ({ goToSignUp }) => {
                   onSubmitEditing={() => formRef.current?.submitForm()}
                 />
                 <Button
+                  loading={loading}
                   onPress={() => {
                     formRef.current?.submitForm();
                   }}
@@ -112,6 +149,7 @@ const SignIn: React.FC<SignInProps> = ({ goToSignUp }) => {
           </Backgroung>
         </ScrollView>
       </KeyboardAvoidingView>
+      <CopyRight>2020 - Criado por Raul Silva</CopyRight>
     </>
   );
 };

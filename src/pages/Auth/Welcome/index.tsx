@@ -54,6 +54,7 @@ const Welcome: React.FC<WelcomeProps> = ({ goToSignIn, goToSignUp }) => {
             />
             <Animated.View style={{ width: "100%", opacity: opacity }}>
               <Button
+                loading={false}
                 style={{
                   marginBottom: 8,
                 }}
@@ -61,7 +62,7 @@ const Welcome: React.FC<WelcomeProps> = ({ goToSignIn, goToSignUp }) => {
               >
                 Já possui uma conta?
               </Button>
-              <Button onPress={() => goToSignUp()}>
+              <Button loading={false} onPress={() => goToSignUp()}>
                 Não possui uma conta?
               </Button>
             </Animated.View>

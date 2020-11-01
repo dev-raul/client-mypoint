@@ -10,7 +10,7 @@ import { TextInputProps } from "react-native";
 import { useTheme } from "styled-components";
 import { useField } from "@unform/core";
 
-import { Container, TextInput } from "./styles";
+import { Container, TextInput, TextError } from "./styles";
 interface InputProps extends TextInputProps {
   name: string;
 }
@@ -66,17 +66,20 @@ const Input: React.ForwardRefRenderFunction<InputRef, InputProps> = (
 
   const { colors } = useTheme();
   return (
-    <Container focused={focused} isValue={isValue}>
-      <TextInput
-        ref={inputRef}
-        onChangeText={(value) => (inputValueRef.current.value = value)}
-        defaultValue={defaultValue}
-        placeholderTextColor={colors.textPrimary}
-        onFocus={handleFocused}
-        onBlur={handleBlur}
-        {...props}
-      />
-    </Container>
+    <>
+      <Container focused={focused} isValue={isValue} isError={!!error}>
+        <TextInput
+          ref={inputRef}
+          onChangeText={(value) => (inputValueRef.current.value = value)}
+          defaultValue={defaultValue}
+          placeholderTextColor={colors.textPrimary}
+          onFocus={handleFocused}
+          onBlur={handleBlur}
+          {...props}
+        />
+      </Container>
+      {error && <TextError> {error} </TextError>}
+    </>
   );
 };
 

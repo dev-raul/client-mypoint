@@ -10,6 +10,7 @@ declare module "styled-components" {
       secundary: string;
       textPrimary: string;
       white: string;
+      danger: string;
     };
     size: {
       font: Function;
@@ -25,6 +26,7 @@ export const lightTheme: DefaultTheme = {
     secundary: "#FF9800",
     textPrimary: "#575757",
     white: "#fff",
+    danger: "#f02626",
   },
   size: {
     font: (x = 1): string => {

@@ -1,4 +1,4 @@
-import styled from "styled-components/native";
+import styled, { css } from "styled-components/native";
 import { Dimensions } from "react-native";
 import { RectButton } from "react-native-gesture-handler";
 
@@ -10,6 +10,7 @@ const { width } = Dimensions.get("screen");
 export const Content = styled(RectButton)`
   justify-content: center;
   align-items: center;
+  flex-direction: row;
   width: 100%;
   border-radius: 4px;
   height: 46px;
