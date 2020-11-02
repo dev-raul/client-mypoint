@@ -2,7 +2,6 @@ import styled, { css } from "styled-components/native";
 interface ContainerProps {
   focused: boolean;
   isValue: boolean;
-  isError: boolean;
 }
 export const Container = styled.View<ContainerProps>`
   margin-bottom: 10px;
@@ -13,15 +12,8 @@ export const Container = styled.View<ContainerProps>`
   flex-direction: row;
   align-items: center;
 
-  ${(props) =>
-    props.isError &&
-    css`
-      border-width: 1px;
-      border-color: ${({ theme }) => theme.colors.danger};
-    `}
-
-  ${(props) =>
-    (props.focused || props.isValue) &&
+  ${({ focused, isValue }) =>
+    (focused || isValue) &&
     css`
       border-color: ${({ theme }) => theme.colors.secundary};
       border-right-width: 0px;

@@ -24,7 +24,7 @@ export const ContentForm = styled(Form)`
 export const Logo = styled(Animated.Image).attrs({
   source: require("../../../../assets/images/logo-signIn.png"),
 })`
-  margin-bottom: 30px;
+  margin-bottom: 50px;
 `;
 export const Title = styled.Text`
   font-family: "RobotoRegular";

@@ -25,15 +25,25 @@ const Input: React.ForwardRefRenderFunction<InputRef, InputProps> = (
   { name, ...props },
   ref
 ) => {
-  const { fieldName, registerField, error, defaultValue = "" } = useField(name);
+  const {
+    fieldName,
+    registerField,
+    error,
+    defaultValue = "",
+    clearError,
+  } = useField(name);
 
   const [focused, setFocused] = useState(false);
   const [isValue, setIsValue] = useState(false);
+  const [isPassword, SetIsPassword] = useState(false);
 
   const inputRef = useRef<any>(null);
   const inputValueRef = useRef<InputRefProps>({ value: defaultValue });
 
   useEffect(() => {
+    inputRef.current?.setNativeProps({
+      style: { fontFamily: "RobotoRegular" },
+    });
     registerField({
       name: fieldName,
       ref: inputValueRef.current,
@@ -54,6 +64,7 @@ const Input: React.ForwardRefRenderFunction<InputRef, InputProps> = (
   }, []);
 
   const handleBlur = useCallback(() => {
+    console.log("blur");
     setFocused(false);
     setIsValue(!!inputValueRef.current.value);
   }, []);
@@ -67,7 +78,7 @@ const Input: React.ForwardRefRenderFunction<InputRef, InputProps> = (
   const { colors } = useTheme();
   return (
     <>
-      <Container focused={focused} isValue={isValue} isError={!!error}>
+      <Container focused={focused} isValue={isValue}>
         <TextInput
           ref={inputRef}
           onChangeText={(value) => (inputValueRef.current.value = value)}

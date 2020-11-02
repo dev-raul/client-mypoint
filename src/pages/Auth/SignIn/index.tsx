@@ -6,7 +6,7 @@ import {
   Animated,
   Dimensions,
   TextInput,
-  StatusBar,
+  Keyboard,
 } from "react-native";
 import * as Yup from "yup";
 import { FormHandles } from "@unform/core";
@@ -38,10 +38,20 @@ const SignIn: React.FC<SignInProps> = ({ goToSignUp }) => {
   const animated = new Animated.Value(0);
 
   const [loading, setLoading] = useState(false);
+  const [keyboardOpen, setKeyboardOpen] = useState(false);
 
   const formRef = useRef<FormHandles>(null);
   const passwordRef = useRef<TextInput>(null);
   useEffect(() => {
+    Keyboard.addListener("keyboardDidShow", () => {
+      console.log("open");
+      setKeyboardOpen(true);
+    });
+    Keyboard.addListener("keyboardDidHide", () => {
+      console.log("close");
+      setKeyboardOpen(false);
+    });
+
     Animated.timing(animated, {
       toValue: 1,
       duration: 1000,
@@ -101,55 +111,56 @@ const SignIn: React.FC<SignInProps> = ({ goToSignUp }) => {
                     {
                       translateY: animated.interpolate({
                         inputRange: [0, 1],
-                        outputRange: [100, 0],
+                        outputRange: [60, 0],
                       }),
                     },
                   ],
                 }}
               />
-              <ContentForm ref={formRef} onSubmit={handleSignIn}>
-                <Title>Olá, seja bem vindo :)</Title>
-                <Input
-                  name="email"
-                  placeholder="Digite seu e-mail"
-                  keyboardType="email-address"
-                  autoCorrect={false}
-                  autoCapitalize="none"
-                  returnKeyType="next"
-                  onSubmitEditing={() => passwordRef.current?.focus()}
-                />
-                <Input
-                  ref={passwordRef}
-                  name="password"
-                  placeholder="Digite a sua senha"
-                  keyboardType="default"
-                  secureTextEntry={true}
-                  autoCorrect={false}
-                  autoCapitalize="none"
-                  returnKeyType="send"
-                  onSubmitEditing={() => formRef.current?.submitForm()}
-                />
-                <Button
-                  loading={loading}
-                  onPress={() => {
-                    formRef.current?.submitForm();
-                  }}
-                >
-                  ENTRAR
-                </Button>
+              <Animated.View style={{ opacity: animated }}>
+                <ContentForm ref={formRef} onSubmit={handleSignIn}>
+                  <Title>Olá, seja bem vindo :)</Title>
+                  <Input
+                    name="email"
+                    placeholder="Digite seu e-mail"
+                    keyboardType="email-address"
+                    autoCorrect={false}
+                    autoCapitalize="none"
+                    returnKeyType="next"
+                    onSubmitEditing={() => passwordRef.current?.focus()}
+                  />
+                  <Input
+                    ref={passwordRef}
+                    name="password"
+                    placeholder="Digite a sua senha"
+                    secureTextEntry={true}
+                    autoCorrect={false}
+                    autoCapitalize="none"
+                    returnKeyType="send"
+                    onSubmitEditing={() => formRef.current?.submitForm()}
+                  />
+                  <Button
+                    loading={loading}
+                    onPress={() => {
+                      formRef.current?.submitForm();
+                    }}
+                  >
+                    ENTRAR
+                  </Button>
 
-                <GoSignUpView onPress={goToSignUp}>
-                  <GoSignUpText>Ainda não tem conta?</GoSignUpText>
-                  <GoSignUpText>
-                    clique para <Span>criar uma conta</Span>
-                  </GoSignUpText>
-                </GoSignUpView>
-              </ContentForm>
+                  <GoSignUpView onPress={goToSignUp}>
+                    <GoSignUpText>Ainda não tem conta?</GoSignUpText>
+                    <GoSignUpText>
+                      clique para <Span>criar uma conta</Span>
+                    </GoSignUpText>
+                  </GoSignUpView>
+                </ContentForm>
+              </Animated.View>
             </Container>
           </Backgroung>
         </ScrollView>
       </KeyboardAvoidingView>
-      <CopyRight>2020 - Criado por Raul Silva</CopyRight>
+      {!keyboardOpen && <CopyRight>2020 - Criado por Raul Silva</CopyRight>}
     </>
   );
 };
