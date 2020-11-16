@@ -6,7 +6,14 @@ import { useTheme } from "styled-components";
 
 import Button from "../../../components/Button";
 
-import { Container, Content, Backgroung, Logo, CopyRight } from "./styles";
+import {
+  Container,
+  Content,
+  Backgroung,
+  Logo,
+  Title,
+  CopyRight,
+} from "./styles";
 interface WelcomeProps {
   goToSignIn: Function;
   goToSignUp: Function;
@@ -52,6 +59,7 @@ const Welcome: React.FC<WelcomeProps> = ({ goToSignIn, goToSignUp }) => {
                 ],
               }}
             />
+            <Title>My Point</Title>
             <Animated.View style={{ width: "100%", opacity: opacity }}>
               <Button
                 loading={false}

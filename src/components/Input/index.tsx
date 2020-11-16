@@ -13,6 +13,8 @@ import { useField } from "@unform/core";
 import { Container, TextInput, TextError } from "./styles";
 interface InputProps extends TextInputProps {
   name: string;
+  validate: Function;
+  rawValue?: string;
 }
 interface InputRefProps {
   value: string;
@@ -22,7 +24,7 @@ interface InputRef {
 }
 
 const Input: React.ForwardRefRenderFunction<InputRef, InputProps> = (
-  { name, ...props },
+  { name, validate, rawValue, onChangeText, ...props },
   ref
 ) => {
   const {
@@ -57,16 +59,25 @@ const Input: React.ForwardRefRenderFunction<InputRef, InputProps> = (
         inputRef.current?.setNativeProps({ text: "" });
       },
     });
-  }, [fieldName, registerField]);
+  }, [fieldName, registerField, rawValue]);
+
+  const handleOnChange = useCallback(
+    (value) => {
+      if (inputValueRef.current) inputValueRef.current.value = value;
+
+      if (onChangeText) onChangeText(value);
+    },
+    [onChangeText]
+  );
 
   const handleFocused = useCallback(() => {
     setFocused(true);
   }, []);
 
-  const handleBlur = useCallback(() => {
-    console.log("blur");
+  const handleBlur = useCallback(async () => {
     setFocused(false);
     setIsValue(!!inputValueRef.current.value);
+    await validate(inputValueRef.current.value);
   }, []);
 
   useImperativeHandle(ref, () => ({
@@ -76,12 +87,13 @@ const Input: React.ForwardRefRenderFunction<InputRef, InputProps> = (
   }));
 
   const { colors } = useTheme();
+
   return (
     <>
-      <Container focused={focused} isValue={isValue}>
+      <Container focused={focused} isValue={isValue} isError={!!error}>
         <TextInput
           ref={inputRef}
-          onChangeText={(value) => (inputValueRef.current.value = value)}
+          onChangeText={handleOnChange}
           defaultValue={defaultValue}
           placeholderTextColor={colors.textPrimary}
           onFocus={handleFocused}

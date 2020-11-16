@@ -30,7 +30,10 @@ export const lightTheme: DefaultTheme = {
   },
   size: {
     font: (x = 1): string => {
-      return `${Math.abs((Dimensions.get("screen").width / 24) * x)}px`;
+      const { width, height } = Dimensions.get("screen");
+      return width < height
+        ? `${Math.abs((width / 24) * x)}px`
+        : `${Math.abs((height / 24) * x)}px`;
     },
   },
 };

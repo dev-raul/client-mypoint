@@ -10,7 +10,7 @@ import {
 } from "react-native";
 import * as Yup from "yup";
 import { FormHandles } from "@unform/core";
-import getValidationErros from "../../../utils/getValidationError";
+import { validator } from "../../../utils/validatorInput";
 
 import Input from "../../../components/Input";
 import Button from "../../../components/Button";
@@ -44,11 +44,9 @@ const SignIn: React.FC<SignInProps> = ({ goToSignUp }) => {
   const passwordRef = useRef<TextInput>(null);
   useEffect(() => {
     Keyboard.addListener("keyboardDidShow", () => {
-      console.log("open");
       setKeyboardOpen(true);
     });
     Keyboard.addListener("keyboardDidHide", () => {
-      console.log("close");
       setKeyboardOpen(false);
     });
 
@@ -58,36 +56,40 @@ const SignIn: React.FC<SignInProps> = ({ goToSignUp }) => {
       useNativeDriver: true,
     }).start();
   }, []);
-  const handleSignIn = useCallback(
-    async (data: FormData) => {
-      console.log(loading);
-      if (!loading) {
-        console.log(data);
-        setLoading(true);
-        try {
-          const scheme = Yup.object().shape({
+  const handleSignIn = useCallback(async (data: FormData) => {
+    if (!loading) {
+      setLoading(true);
+      try {
+        await validator(
+          formRef,
+          {
             email: Yup.string()
               .email("Digite um e-mail válido")
               .required("E-mail obrigatório"),
             password: Yup.string().min(8, "No mínimo 8 digitos"),
-          });
+          },
+          data
+        );
+        formRef.current?.setErrors({});
+      } catch (err) {}
+      setLoading(false);
+    }
+  }, []);
 
-          await scheme.validate(data, { abortEarly: false });
-          formRef.current?.setErrors({});
-          setLoading(false);
-        } catch (err) {
-          if (err instanceof Yup.ValidationError) {
-            console.log(err);
-            const errors = getValidationErros(err);
-            console.log("errprs", errors);
-            formRef.current?.setErrors(errors);
-          }
-          setLoading(false);
-        }
-      }
-    },
-    [loading]
-  );
+  // const validator = useCallback(async (shape, data) => {
+  //   try {
+  //     const scheme = Yup.object().shape(shape);
+
+  //     await scheme.validate(data, { abortEarly: false });
+  //   } catch (err) {
+  //     if (err instanceof Yup.ValidationError) {
+  //       const errors = getValidationErros(err);
+  //       let preErros = formRef.current?.getErrors();
+  //       formRef.current?.setErrors({ ...preErros, ...errors });
+  //     }
+  //     throw "";
+  //   }
+  // }, []);
 
   return (
     <>
@@ -121,6 +123,22 @@ const SignIn: React.FC<SignInProps> = ({ goToSignUp }) => {
                 <ContentForm ref={formRef} onSubmit={handleSignIn}>
                   <Title>Olá, seja bem vindo :)</Title>
                   <Input
+                    validate={async (email) => {
+                      try {
+                        await validator(
+                          formRef,
+                          {
+                            email: Yup.string()
+                              .email("Digite um e-mail válido")
+                              .required("E-mail obrigatório"),
+                          },
+                          { email }
+                        );
+                        let errors = formRef.current?.getErrors();
+                        delete errors.email;
+                        formRef.current?.setErrors(errors);
+                      } catch (err) {}
+                    }}
                     name="email"
                     placeholder="Digite seu e-mail"
                     keyboardType="email-address"
@@ -130,6 +148,23 @@ const SignIn: React.FC<SignInProps> = ({ goToSignUp }) => {
                     onSubmitEditing={() => passwordRef.current?.focus()}
                   />
                   <Input
+                    validate={async (password) => {
+                      try {
+                        await validator(
+                          formRef,
+                          {
+                            password: Yup.string().min(
+                              8,
+                              "No mínimo 8 digitos"
+                            ),
+                          },
+                          { password }
+                        );
+                        let errors = formRef.current?.getErrors();
+                        delete errors.password;
+                        formRef.current?.setErrors(errors);
+                      } catch (err) {}
+                    }}
                     ref={passwordRef}
                     name="password"
                     placeholder="Digite a sua senha"

@@ -33,7 +33,13 @@ export const Logo = styled(Animated.Image).attrs({
 })`
   width: 120px;
   height: 120px;
+  margin-bottom: 10px;
+`;
+export const Title = styled.Text`
   margin-bottom: 100px;
+  color: #fff;
+  font-family: "RobotoRegular";
+  font-size: ${({ theme }) => theme.size.font(1.3)};
 `;
 
 export const CopyRight = styled.Text`
