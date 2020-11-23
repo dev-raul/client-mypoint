@@ -9,9 +9,11 @@ import {
   Keyboard,
   View,
 } from "react-native";
+import api from "../../../services/api";
 import * as Yup from "yup";
 import { FormHandles } from "@unform/core";
 import { validator } from "../../../utils/validatorInput";
+import { stringFilterNumber } from "../../../utils/stringFilteNumber";
 
 import Input from "../../../components/Input";
 import Button from "../../../components/Button";
@@ -34,8 +36,12 @@ interface SignUpProps {
   goToSignIn(): void;
 }
 interface FormData {
+  name: string;
+  surname: string;
+  cpf: string;
   email: string;
   password: string;
+  confirmPassword: string;
 }
 const SignUp: React.FC<SignUpProps> = ({ goToSignIn }) => {
   const animated = new Animated.Value(0);
@@ -76,7 +82,7 @@ const SignUp: React.FC<SignUpProps> = ({ goToSignIn }) => {
             name: Yup.string().required("Nome obrigatório"),
             surname: Yup.string().required("Sobrenome obrigatório"),
             cpf: Yup.string()
-              .length(11, "O cpf tem 11 números")
+              .length(14, "O cpf tem 11 números")
               .required("Cpf obrigatório"),
             email: Yup.string()
               .email("Digite um e-mail válido")
@@ -89,7 +95,17 @@ const SignUp: React.FC<SignUpProps> = ({ goToSignIn }) => {
           },
           data
         );
-      } catch (err) {}
+        console.log("data", data);
+        // const res = await api.get("/");
+        const res = await api.post("/user", {
+          ...data,
+          cpf: stringFilterNumber(data.cpf),
+          type: 1,
+        });
+        console.log("res.data", res.data);
+      } catch (err) {
+        console.log(err);
+      }
       setLoading(false);
     },
     [loading]
@@ -192,21 +208,24 @@ const SignUp: React.FC<SignUpProps> = ({ goToSignIn }) => {
                     </View>
                   </Row>
                   <InputMask
-                    validate={async (cpf) => {
-                      try {
-                        await validator(
-                          formRef,
-                          {
-                            cpf: Yup.string()
-                              .required("Cpf obrigatório")
-                              .length(11, "O cpf tem 11 números"),
-                          },
-                          { cpf }
-                        );
-                        let errors = formRef.current?.getErrors();
-                        delete errors.cpf;
-                        formRef.current?.setErrors(errors);
-                      } catch (err) {}
+                    validate={async (cpf: string) => {
+                      console.log(cpf, cpf.length);
+                      if (cpf.length <= 14) {
+                        try {
+                          await validator(
+                            formRef,
+                            {
+                              cpf: Yup.string()
+                                .required("Cpf obrigatório")
+                                .length(14, "O cpf tem 11 números"),
+                            },
+                            { cpf }
+                          );
+                          let errors = formRef.current?.getErrors();
+                          delete errors.cpf;
+                          formRef.current?.setErrors(errors);
+                        } catch (err) {}
+                      }
                     }}
                     ref={cpfRef}
                     placeholder="Cpf"
@@ -274,12 +293,18 @@ const SignUp: React.FC<SignUpProps> = ({ goToSignIn }) => {
                         await validator(
                           formRef,
                           {
+                            password: Yup.string().required(
+                              "Senha obrigatória"
+                            ),
                             confirmPassword: Yup.string().oneOf(
                               [Yup.ref("password"), null],
                               "As senhas não conferem"
                             ),
                           },
-                          { confirmPassword }
+                          {
+                            password: formRef.current.getFieldValue("password"),
+                            confirmPassword,
+                          }
                         );
                         let errors = formRef.current?.getErrors();
                         delete errors.confirmPassword;

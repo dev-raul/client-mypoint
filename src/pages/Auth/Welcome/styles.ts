@@ -1,7 +1,6 @@
 import styled from "styled-components/native";
-import { Dimensions, FlatList } from "react-native";
+import { Dimensions } from "react-native";
 import Animated from "react-native-reanimated";
-import { RectButton } from "react-native-gesture-handler";
 const { width } = Dimensions.get("screen");
 import { LinearGradient } from "expo-linear-gradient";
 import { rgba } from "polished";
