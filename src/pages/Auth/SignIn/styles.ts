@@ -1,20 +1,16 @@
 import styled from "styled-components/native";
 import { Dimensions, Animated } from "react-native";
 import { Form } from "@unform/mobile";
-
+import {getBottomSpace} from 'react-native-iphone-x-helper'
 const { width } = Dimensions.get("screen");
 import { lighten, rgba } from "polished";
 
-export const Backgroung = styled.ImageBackground`
-  flex: 1;
-  width: ${width}px;
-`;
 export const Container = styled.View`
   flex: 1;
   width: ${width}px;
   justify-content: center;
   align-items: center;
-  background: ${({ theme }) => rgba(theme.colors.background, 0.95)};
+  background: transparent;
 `;
 export const ContentForm = styled(Form)`
   justify-content: center;
@@ -52,7 +48,7 @@ export const Span = styled.Text`
 
 export const CopyRight = styled.Text`
   position: absolute;
-  bottom: 5px;
+  bottom: ${getBottomSpace()}px;
   text-align: center;
   right: 0;
   left: 0;

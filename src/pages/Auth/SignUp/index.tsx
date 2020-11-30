@@ -25,7 +25,6 @@ import {
   GoSignUpView,
   GoSignUpText,
   Span,
-  Backgroung,
   CopyRight,
   Row,
 } from "./styles";
@@ -118,13 +117,9 @@ const SignUp: React.FC<SignUpProps> = ({ goToSignIn }) => {
         enabled
       >
         <ScrollView
-          contentContainerStyle={{ flex: 1, width }}
+          contentContainerStyle={{ flex: 1, width}}
           keyboardShouldPersistTaps="handled"
         >
-          <Backgroung
-            source={require("../../../../assets/images/background.jpg")}
-            imageStyle={{ resizeMode: "cover" }}
-          >
             <Container>
               <Logo
                 style={{
@@ -337,7 +332,6 @@ const SignUp: React.FC<SignUpProps> = ({ goToSignIn }) => {
                 </ContentForm>
               </Animated.View>
             </Container>
-          </Backgroung>
         </ScrollView>
       </KeyboardAvoidingView>
       {!keyboardOpen && <CopyRight>2020 - Criado por Raul Silva</CopyRight>}

@@ -4,6 +4,7 @@ import Animated from "react-native-reanimated";
 const { width } = Dimensions.get("screen");
 import { LinearGradient } from "expo-linear-gradient";
 import { rgba } from "polished";
+import {getBottomSpace} from 'react-native-iphone-x-helper'
 export const Backgroung = styled.ImageBackground`
   flex: 1;
   width: ${width}px;
@@ -43,7 +44,7 @@ export const Title = styled.Text`
 
 export const CopyRight = styled.Text`
   position: absolute;
-  bottom: 5px;
+  bottom: ${getBottomSpace()}px;
   text-align: center;
   right: 0;
   left: 0;

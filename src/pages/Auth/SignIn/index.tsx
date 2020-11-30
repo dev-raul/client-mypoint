@@ -23,7 +23,6 @@ import {
   GoSignUpView,
   GoSignUpText,
   Span,
-  Backgroung,
   CopyRight,
 } from "./styles";
 const { width } = Dimensions.get("screen");
@@ -76,20 +75,7 @@ const SignIn: React.FC<SignInProps> = ({ goToSignUp }) => {
     }
   }, []);
 
-  // const validator = useCallback(async (shape, data) => {
-  //   try {
-  //     const scheme = Yup.object().shape(shape);
 
-  //     await scheme.validate(data, { abortEarly: false });
-  //   } catch (err) {
-  //     if (err instanceof Yup.ValidationError) {
-  //       const errors = getValidationErros(err);
-  //       let preErros = formRef.current?.getErrors();
-  //       formRef.current?.setErrors({ ...preErros, ...errors });
-  //     }
-  //     throw "";
-  //   }
-  // }, []);
 
   return (
     <>
@@ -102,10 +88,6 @@ const SignIn: React.FC<SignInProps> = ({ goToSignUp }) => {
           contentContainerStyle={{ flex: 1, width }}
           keyboardShouldPersistTaps="handled"
         >
-          <Backgroung
-            source={require("../../../../assets/images/background.jpg")}
-            imageStyle={{ resizeMode: "cover" }}
-          >
             <Container>
               <Logo
                 style={{
@@ -192,7 +174,6 @@ const SignIn: React.FC<SignInProps> = ({ goToSignUp }) => {
                 </ContentForm>
               </Animated.View>
             </Container>
-          </Backgroung>
         </ScrollView>
       </KeyboardAvoidingView>
       {!keyboardOpen && <CopyRight>2020 - Criado por Raul Silva</CopyRight>}
