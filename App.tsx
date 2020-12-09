@@ -5,6 +5,7 @@ import { AppLoading } from "expo";
 import { NavigationContainer } from "@react-navigation/native";
 import Routes from "./src/routes";
 import { ThemeProvider } from "styled-components";
+import { AuthProvider } from "./src/contexts/Auth";
 import { lightTheme } from "./src/themes";
 
 import { useFonts } from "expo-font";
@@ -22,13 +23,15 @@ export default function App() {
 
   return (
     <NavigationContainer>
-      <ThemeProvider theme={lightTheme}>
-        <StatusBar
-          barStyle="light-content"
-          backgroundColor={lightTheme.colors.primary}
-        />
-        <Routes />
-      </ThemeProvider>
+      <AuthProvider>
+        <ThemeProvider theme={lightTheme}>
+          <StatusBar
+            barStyle="light-content"
+            backgroundColor={lightTheme.colors.primary}
+          />
+          <Routes />
+        </ThemeProvider>
+      </AuthProvider>
     </NavigationContainer>
   );
 }

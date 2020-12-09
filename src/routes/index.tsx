@@ -1,19 +1,21 @@
 import React from "react";
+import { View } from "react-native";
 import { createStackNavigator } from "@react-navigation/stack";
 
-import Auth from "../pages/Auth";
+import AuthStack from "./AuthStack";
 
-const Stack = createStackNavigator();
+import { useAuth } from "../contexts/Auth";
 
 const Routes: React.FC = () => {
-  return (
-    <Stack.Navigator>
-      <Stack.Screen
-        options={{ headerShown: false }}
-        name="Auth"
-        component={Auth}
-      />
-    </Stack.Navigator>
+  const { signed, loading } = useAuth();
+
+  if (loading) {
+    return <></>;
+  }
+  return signed ? (
+    <View style={{ flex: 1, backgroundColor: "red" }} />
+  ) : (
+    <AuthStack />
   );
 };
 
