@@ -28,6 +28,7 @@ export interface SignUpData {
 interface AuthContextData {
   SignIn: (data: SignInData) => Promise<void>;
   SignUp: (data: SignUpData) => Promise<void>;
+  SignOut: () => Promise<void>;
   signed: boolean;
   loading: boolean;
 }
@@ -42,6 +43,15 @@ export const AuthProvider: React.FC<AuthProviderProps> = ({ children }) => {
   const [loading, setLoading] = useState(true);
 
   useEffect(() => {
+    (async () => {
+      const storageToken = await AsyncStorage.getItem("@MyPoint:token");
+      if (storageToken) {
+        api.defaults.headers.Authorization = `Bearer ${storageToken}`;
+        setSigned(true);
+      } else {
+        await AsyncStorage.removeItem("@MyPoint:token");
+      }
+    })();
     setLoading(false);
   }, []);
 
@@ -61,10 +71,10 @@ export const AuthProvider: React.FC<AuthProviderProps> = ({ children }) => {
       console.log("res.data", res.data);
       Toast(`A sua conta foi criada! :)`);
     } catch (err) {
-      console.log("err", err);
+      console.log("err", err.response.data);
       if (err.response) {
-        if (err.repsonse.data) {
-          Toast(`${err.repsonse.data} :/`);
+        if (err.response.data) {
+          Toast(`${err.response.data.error} :/`);
           throw new Error();
         }
       }
@@ -72,11 +82,19 @@ export const AuthProvider: React.FC<AuthProviderProps> = ({ children }) => {
     }
   }, []);
 
+  const SignOut = useCallback(async () => {
+    try {
+      await AsyncStorage.removeItem("@MyPoint:token");
+      setSigned(false);
+    } catch (err) {}
+  }, []);
+
   return (
     <AuthContext.Provider
       value={{
         SignIn,
         SignUp,
+        SignOut,
         signed,
         loading,
       }}

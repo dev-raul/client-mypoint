@@ -97,6 +97,7 @@ const SignUp: React.FC<SignUpProps> = ({ goToSignIn }) => {
           ...data,
           cpf: stringFilterNumber(data.cpf),
         });
+        goToSignIn();
       } catch (err) {
         console.log(err);
       }

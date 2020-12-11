@@ -1,8 +1,7 @@
 import React from "react";
-import { View } from "react-native";
-import { createStackNavigator } from "@react-navigation/stack";
 
 import AuthStack from "./AuthStack";
+import AppDrawer from "./AppDrawer";
 
 import { useAuth } from "../contexts/Auth";
 
@@ -12,11 +11,7 @@ const Routes: React.FC = () => {
   if (loading) {
     return <></>;
   }
-  return signed ? (
-    <View style={{ flex: 1, backgroundColor: "red" }} />
-  ) : (
-    <AuthStack />
-  );
+  return signed ? <AppDrawer /> : <AuthStack />;
 };
 
 export default Routes;
