@@ -5,6 +5,7 @@ import {
   DrawerNavigationProp,
 } from "@react-navigation/drawer";
 
+import DrawerContent, { DRAWER_WIDTH } from "../components/Drawer";
 import Home from "../pages/Home";
 
 export type DrawerParamList = {
@@ -19,7 +20,10 @@ const Drawer = createDrawerNavigator<DrawerParamList>();
 
 const HomeDrawer: React.FC<DrawerProps> = () => {
   return (
-    <Drawer.Navigator>
+    <Drawer.Navigator
+      drawerStyle={{ width: DRAWER_WIDTH }}
+      drawerContent={(props) => <DrawerContent {...props} />}
+    >
       <Drawer.Screen name="Home" component={Home} />
     </Drawer.Navigator>
   );

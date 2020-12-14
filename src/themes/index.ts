@@ -8,6 +8,7 @@ declare module "styled-components" {
       primary: string;
       primary_light: string;
       secundary: string;
+      secundary_light: string;
       textPrimary: string;
       white: string;
       danger: string;
@@ -24,6 +25,7 @@ export const lightTheme: DefaultTheme = {
     primary: "#5f5aa2",
     primary_light: "#716bc2",
     secundary: "#FF9800",
+    secundary_light: "#ffcf4d",
     textPrimary: "#575757",
     white: "#fff",
     danger: "#f02626",

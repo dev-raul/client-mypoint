@@ -15,11 +15,7 @@ export const Content = styled(RectButton)`
   border-radius: 4px;
   height: 46px;
 `;
-export const Container = styled(LinearGradient).attrs(({ theme }) => ({
-  start: [0, 1],
-  end: [1, 0],
-  colors: [theme.colors.secundary, "#ffcf4d"],
-}))`
+export const Container = styled(LinearGradient)`
   width: 100%;
   border-radius: 4px;
 `;

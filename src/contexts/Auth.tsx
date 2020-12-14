@@ -11,7 +11,7 @@ import AsyncStorage from "@react-native-community/async-storage";
 import api from "../services/api";
 import Toast from "../utils/Toast";
 
-import { ISession } from "../@types";
+import { ISession, IUser } from "../@types";
 
 export interface SignInData {
   email: string;
@@ -29,6 +29,7 @@ interface AuthContextData {
   SignIn: (data: SignInData) => Promise<void>;
   SignUp: (data: SignUpData) => Promise<void>;
   SignOut: () => Promise<void>;
+  user: IUser;
   signed: boolean;
   loading: boolean;
 }
@@ -41,12 +42,15 @@ interface AuthProviderProps {
 export const AuthProvider: React.FC<AuthProviderProps> = ({ children }) => {
   const [signed, setSigned] = useState(false);
   const [loading, setLoading] = useState(true);
+  const [user, setUser] = useState<IUser>({} as IUser);
 
   useEffect(() => {
     (async () => {
       const storageToken = await AsyncStorage.getItem("@MyPoint:token");
       if (storageToken) {
         api.defaults.headers.Authorization = `Bearer ${storageToken}`;
+        const { data } = await api.get<IUser>("user");
+        setUser({ email: data.email, name: data.name, surname: data.surname });
         setSigned(true);
       } else {
         await AsyncStorage.removeItem("@MyPoint:token");
@@ -60,6 +64,11 @@ export const AuthProvider: React.FC<AuthProviderProps> = ({ children }) => {
       const { data } = await api.post<ISession>("/session", request);
       await AsyncStorage.setItem("@MyPoint:token", data.token);
       api.defaults.headers.Authorization = `Bearer ${data.token}`;
+      setUser({
+        email: data.user.email,
+        name: data.user.name,
+        surname: data.user.surname,
+      });
       setSigned(true);
     } catch (err) {
       Toast("Opa, verifique as suas credenciais! :/");
@@ -97,6 +106,7 @@ export const AuthProvider: React.FC<AuthProviderProps> = ({ children }) => {
         SignOut,
         signed,
         loading,
+        user,
       }}
     >
       {children}

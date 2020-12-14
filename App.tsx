@@ -22,16 +22,16 @@ export default function App() {
   }
 
   return (
-    <NavigationContainer>
+    <ThemeProvider theme={lightTheme}>
       <AuthProvider>
-        <ThemeProvider theme={lightTheme}>
+        <NavigationContainer>
           <StatusBar
             barStyle="light-content"
             backgroundColor={lightTheme.colors.primary}
           />
           <Routes />
-        </ThemeProvider>
+        </NavigationContainer>
       </AuthProvider>
-    </NavigationContainer>
+    </ThemeProvider>
   );
 }
