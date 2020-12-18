@@ -23,15 +23,15 @@ export default function App() {
 
   return (
     <ThemeProvider theme={lightTheme}>
-      <AuthProvider>
-        <NavigationContainer>
+      <NavigationContainer>
+        <AuthProvider>
           <StatusBar
             barStyle="light-content"
             backgroundColor={lightTheme.colors.primary}
           />
           <Routes />
-        </NavigationContainer>
-      </AuthProvider>
+        </AuthProvider>
+      </NavigationContainer>
     </ThemeProvider>
   );
 }

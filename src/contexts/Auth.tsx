@@ -46,17 +46,25 @@ export const AuthProvider: React.FC<AuthProviderProps> = ({ children }) => {
 
   useEffect(() => {
     (async () => {
-      const storageToken = await AsyncStorage.getItem("@MyPoint:token");
-      if (storageToken) {
-        api.defaults.headers.Authorization = `Bearer ${storageToken}`;
-        const { data } = await api.get<IUser>("user");
-        setUser({ email: data.email, name: data.name, surname: data.surname });
-        setSigned(true);
-      } else {
-        await AsyncStorage.removeItem("@MyPoint:token");
+      try {
+        const storageToken = await AsyncStorage.getItem("@MyPoint:token");
+        if (storageToken) {
+          api.defaults.headers.Authorization = `Bearer ${storageToken}`;
+          const { data } = await api.get<IUser>("user");
+          setUser({
+            email: data.email,
+            name: data.name,
+            surname: data.surname,
+          });
+          setSigned(true);
+        } else {
+          await AsyncStorage.removeItem("@MyPoint:token");
+        }
+        setLoading(false);
+      } catch (err) {
+        setLoading(false);
       }
     })();
-    setLoading(false);
   }, []);
 
   const SignIn = useCallback(async (request: SignInData) => {

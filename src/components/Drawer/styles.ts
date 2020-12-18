@@ -1,4 +1,5 @@
 import styled from "styled-components/native";
+import { lighten } from "polished";
 
 interface FotoProfileProps {
   width: number;
@@ -20,7 +21,7 @@ export const HeaderBackground = styled.View`
   border-bottom-right-radius: 70px;
   background-color: ${({ theme }) => theme.colors.primary};
 `;
-export const FotoProfile = styled.View<FotoProfileProps>`
+export const FotoProfile = styled.TouchableOpacity<FotoProfileProps>`
   position: absolute;
   left: ${({ width }) => width / 2 - 50}px;
   right: 0;
@@ -29,7 +30,14 @@ export const FotoProfile = styled.View<FotoProfileProps>`
   width: 100px;
   height: 100px;
   border-radius: 50px;
-  background-color: ${({ theme }) => theme.colors.textPrimary};
+  background-color: ${({ theme }) => lighten(0.2, theme.colors.textPrimary)};
+  justify-content: center;
+  align-items: center;
+`;
+export const ImageProfile = styled.Image`
+  width: 100px;
+  height: 100px;
+  border-radius: 50px;
 `;
 export const Main = styled.View`
   flex: 0.8;
