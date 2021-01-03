@@ -11,7 +11,7 @@ import AsyncStorage from "@react-native-community/async-storage";
 import api from "../services/api";
 import Toast from "../utils/Toast";
 
-import { ISession, IUser } from "../@types";
+import { ISession, IUser, IUserStorage } from "../@types";
 
 export interface SignInData {
   email: string;
@@ -29,7 +29,8 @@ interface AuthContextData {
   SignIn: (data: SignInData) => Promise<void>;
   SignUp: (data: SignUpData) => Promise<void>;
   SignOut: () => Promise<void>;
-  user: IUser;
+  setUser: React.Dispatch<React.SetStateAction<IUserStorage>>;
+  user: IUserStorage;
   signed: boolean;
   loading: boolean;
 }
@@ -42,7 +43,7 @@ interface AuthProviderProps {
 export const AuthProvider: React.FC<AuthProviderProps> = ({ children }) => {
   const [signed, setSigned] = useState(false);
   const [loading, setLoading] = useState(true);
-  const [user, setUser] = useState<IUser>({} as IUser);
+  const [user, setUser] = useState<IUserStorage>({} as IUserStorage);
 
   useEffect(() => {
     (async () => {
@@ -51,10 +52,12 @@ export const AuthProvider: React.FC<AuthProviderProps> = ({ children }) => {
         if (storageToken) {
           api.defaults.headers.Authorization = `Bearer ${storageToken}`;
           const { data } = await api.get<IUser>("user");
-          setUser({
+          setUser({ 
+            id: data.id,
             email: data.email,
             name: data.name,
             surname: data.surname,
+            profile: data.profile
           });
           setSigned(true);
         } else {
@@ -73,12 +76,15 @@ export const AuthProvider: React.FC<AuthProviderProps> = ({ children }) => {
       await AsyncStorage.setItem("@MyPoint:token", data.token);
       api.defaults.headers.Authorization = `Bearer ${data.token}`;
       setUser({
+        id: data.user.id,
         email: data.user.email,
         name: data.user.name,
         surname: data.user.surname,
+        profile: data.user.profile,
       });
       setSigned(true);
     } catch (err) {
+      console.log('err', err)
       Toast("Opa, verifique as suas credenciais! :/");
     }
   }, []);
@@ -112,6 +118,7 @@ export const AuthProvider: React.FC<AuthProviderProps> = ({ children }) => {
         SignIn,
         SignUp,
         SignOut,
+        setUser,
         signed,
         loading,
         user,

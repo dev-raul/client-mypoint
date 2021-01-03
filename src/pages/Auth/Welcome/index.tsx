@@ -77,7 +77,6 @@ const Welcome: React.FC<WelcomeProps> = ({ goToSignIn, goToSignUp }) => {
           </Content>
         </Container>
       </Backgroung>
-      <CopyRight>2020 - Criado por Raul Silva</CopyRight>
     </>
   );
 };

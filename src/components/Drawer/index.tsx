@@ -5,9 +5,16 @@ import {
   TouchableOpacity,
   Platform,
   Image,
+  ActivityIndicator,
+  StyleSheet
 } from "react-native";
+import Toast from '../../utils/Toast'
+import AsyncStorage from '@react-native-community/async-storage'
 import { useAuth } from "../../contexts/Auth";
 import { useTheme } from "styled-components";
+
+import api, {baseURL} from '../../services/api'
+
 import {
   DrawerContentComponentProps,
   DrawerContentOptions,
@@ -35,6 +42,9 @@ import {
 import { ItemProps } from "./Item";
 import * as ImagePicker from "expo-image-picker";
 import Constants from "expo-constants";
+
+import {IProfilePost} from '../../@types'
+
 interface DrawerProps
   extends DrawerContentComponentProps<DrawerContentOptions> {}
 
@@ -42,9 +52,10 @@ const { width } = Dimensions.get("window");
 export const DRAWER_WIDTH = width * 0.8;
 
 const Drawer: React.FC<DrawerProps> = () => {
-  const { SignOut, user } = useAuth();
+  const { SignOut, user, setUser } = useAuth();
   const { colors } = useTheme();
   const [image, setImage] = useState(null);
+  const [loadingProfile, setLoadingProfile] = useState(false)
 
   const ITEMS: ItemProps[] = useMemo((): ItemProps[] => {
     return [
@@ -65,8 +76,16 @@ const Drawer: React.FC<DrawerProps> = () => {
           alert("Precisamos de permissões da câmera para fazer este trabalho!");
         }
       }
+      if(user.profile){
+        const token = await AsyncStorage.getItem("@MyPoint:token")
+        setImage(`${baseURL}/file/${user.profile}?token=${token}`)
+      }
     })();
+    
+
+      
   }, []);
+
   const setProfile = async () => {
     let result = await ImagePicker.launchImageLibraryAsync({
       mediaTypes: ImagePicker.MediaTypeOptions.Images,
@@ -76,7 +95,37 @@ const Drawer: React.FC<DrawerProps> = () => {
     });
 
     if (!result.cancelled) {
-      setImage(result?.uri);
+      const localUri = result.uri; 
+      const filename = localUri.split('/').pop();
+      const match = /\.(\w+)$/.exec(filename);
+      const type = match ? `image/${match[1]}` : `image`;
+      
+      
+      const data = new FormData();
+      
+      data.append("file", {
+        name: filename,
+        type,
+        uri:
+        Platform.OS === "android" ? localUri : localUri.replace("file://", "")
+      } );
+      try{
+        setLoadingProfile(true)
+        const resUpload = await api.post(`/user/${user.id}/profile`, data, {
+          headers: {
+            "content-type": "multipart/form-data"
+          }
+        })
+        setImage(result?.uri);
+        setUser({...user, profile: resUpload.data.profile})
+        setLoadingProfile(false)
+      }catch(err){
+        setLoadingProfile(false)
+        if(err.response){
+          Toast(err.response.data.error)
+        }
+
+      }
     }
   };
 
@@ -107,8 +156,17 @@ const Drawer: React.FC<DrawerProps> = () => {
           activeOpacity={0.95}
           onPress={setProfile}
         >
+          
+          {loadingProfile && (
+            <ActivityIndicator size='small' color={colors.white} style={[StyleSheet.absoluteFill, {zIndex: 10, elevation:3}]} />
+          )}
           {image ? (
-            <ImageProfile source={{ uri: image }} />
+            <ImageProfile  
+            source={{ 
+              uri: image,
+             }} 
+             resizeMode='cover'
+            />
           ) : (
             <AntDesign name="adduser" size={40} color={colors.white} />
           )}

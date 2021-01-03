@@ -93,7 +93,7 @@ export const Item = styled.View`
   flex-direction: row;
   align-items: center;
   padding-left: 20px;
-  margin-bottom: 10px;
+  margin: 5px 0px;
 `;
 export const ItemIcon = styled.View`
   width: 40px;

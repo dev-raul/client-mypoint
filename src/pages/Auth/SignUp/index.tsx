@@ -42,7 +42,6 @@ const SignUp: React.FC<SignUpProps> = ({ goToSignIn }) => {
   const animated = new Animated.Value(0);
 
   const [loading, setLoading] = useState(false);
-  const [keyboardOpen, setKeyboardOpen] = useState(false);
 
   const formRef = useRef<FormHandles>(null);
 
@@ -53,12 +52,7 @@ const SignUp: React.FC<SignUpProps> = ({ goToSignIn }) => {
   const confirmPasswordRef = useRef<TextInput>(null);
 
   useEffect(() => {
-    Keyboard.addListener("keyboardDidShow", () => {
-      setKeyboardOpen(true);
-    });
-    Keyboard.addListener("keyboardDidHide", () => {
-      setKeyboardOpen(false);
-    });
+   
 
     Animated.timing(animated, {
       toValue: 1,
@@ -329,7 +323,6 @@ const SignUp: React.FC<SignUpProps> = ({ goToSignIn }) => {
           </Container>
         </ScrollView>
       </KeyboardAvoidingView>
-      {!keyboardOpen && <CopyRight>2020 - Criado por Raul Silva</CopyRight>}
     </>
   );
 };
